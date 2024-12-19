@@ -20,19 +20,26 @@ func ExecNoError(t *testing.T, db *sql.DB, sql string, args ...any) {
 	assert.NoError(t, err)
 }
 
+func ExecWithErrorContains(t *testing.T, db *sql.DB, contains string, sql string, args ...any) {
+	t.Helper()
+	log.Println(sql)
+	_, err := db.Exec(sql, args...)
+	assert.ErrorContains(t, err, contains)
+}
+
+func Query(t *testing.T, db *sql.DB, sql string, args ...any) (*sql.Rows, error) {
+	t.Helper()
+	log.Println(sql)
+	rows, err := db.Query(sql, args...)
+	return rows, err
+}
+
 func QueryNoError(t *testing.T, db *sql.DB, sql string, args ...any) *sql.Rows {
 	t.Helper()
 	log.Println(sql)
 	rows, err := db.Query(sql, args...)
 	assert.NoError(t, err)
 	return rows
-}
-
-func ExecWithErrorContains(t *testing.T, db *sql.DB, contains string, sql string, args ...any) {
-	t.Helper()
-	log.Println(sql)
-	_, err := db.Exec(sql, args...)
-	assert.ErrorContains(t, err, contains)
 }
 
 func QueryWithErrorContains(t *testing.T, db *sql.DB, contains string, sql string, args ...any) {
